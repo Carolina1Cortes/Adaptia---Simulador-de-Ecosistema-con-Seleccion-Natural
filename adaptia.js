@@ -754,27 +754,27 @@ function renderizar() {
       if (terreno === "agua") {
         const img = document.createElement("img");
         img.className = "terrain-img";
-        img.src = "tiles/agua.png";
+        img.src = "agua.png";
         cell.appendChild(img);
       } else if (terreno === "arbol") {
         const img = document.createElement("img");
         img.className = "terrain-img arbol-img";
-        img.src = "tiles/arbol1.png";
+        img.src = "arbol1.png";
         cell.appendChild(img);
       } else if (terreno === "roca") {
         const img = document.createElement("img");
         img.className = "terrain-img";
-        img.src = "tiles/roca.png";
+        img.src = "roca.png";
         cell.appendChild(img);
       } else if (terreno === "arbusto") {
         const img = document.createElement("img");
         img.className = "terrain-img arbusto-img";
-        img.src = "tiles/arbusto.png";
+        img.src = "arbusto.png";
         cell.appendChild(img);
       } else if (terreno === "planta1" || terreno === "planta2" || terreno === "planta3") {
         const img = document.createElement("img");
         img.className = "deco-img";
-        img.src = `tiles/${terreno}.png`;
+        img.src = `${terreno}.png`;
         cell.appendChild(img);
       }
 
@@ -784,7 +784,7 @@ function renderizar() {
         if (criatura.tipo === "planta") {
           const img = document.createElement("img");
           img.className = "planta-eco";
-          img.src = "tiles/planta2.png";
+          img.src = "planta2.png";
           cell.appendChild(img);
         } else {
           const img = document.createElement("img");
