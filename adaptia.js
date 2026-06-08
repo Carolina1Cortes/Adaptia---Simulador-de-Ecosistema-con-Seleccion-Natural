@@ -784,7 +784,7 @@ function renderizar() {
         if (criatura.tipo === "planta") {
           const img = document.createElement("img");
           img.className = "planta-eco";
-          img.src = "planta2.png";
+          img.src = "tiles/planta2.png";
           cell.appendChild(img);
         } else {
           const img = document.createElement("img");
