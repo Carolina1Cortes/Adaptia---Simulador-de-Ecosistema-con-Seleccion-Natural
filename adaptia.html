@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptia - Ecosystem Evolution Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+  <!-- PANEL IZQUIERDO -->
+  <aside class="left-panel">
+    <div class="logo-area">
+      <div class="logo-icon"></div>
+      <div class="logo-text">
+        <h1>ADAPTIA</h1>
+        <p class="subtitle">Ecosystem Simulator</p>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button id="btnIniciar"   class="btn btn-green">▶ Iniciar</button>
+      <button id="btnDetener"   class="btn btn-gray">■ Detener</button>
+      <button id="btnReiniciar" class="btn btn-gray">↻ Reiniciar</button>
+    </div>
+
+    <div class="speed-control">
+      <label>Velocidad: <span id="valorVelocidad">1x</span></label>
+      <input type="range" id="velocidadSimulacion" min="0" max="4" value="2" step="1">
+      <div class="speed-labels">
+        <span>0.25x</span><span>0.5x</span><span>1x</span><span>2x</span><span>4x</span>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card herbivore">
+        <div class="stat-sprite hare-sprite-mini"></div>
+        <span class="stat-num" id="countHerbivoros">0</span>
+        <span class="stat-label">Herbívoros</span>
+      </div>
+      <div class="stat-card carnivore">
+        <div class="stat-sprite boar-sprite-mini"></div>
+        <span class="stat-num" id="countCarnivoros">0</span>
+        <span class="stat-label">Carnívoros</span>
+      </div>
+      <div class="stat-card plant">
+        <div class="stat-icon"><img src="planta1.png" alt="planta"></div>
+        <span class="stat-num" id="countPlantas">0</span>
+        <span class="stat-label">Plantas</span>
+      </div>
+      <div class="stat-card gen" id="cardGeneracion" onclick="togglePanelGeneracion()" style="cursor:pointer" title="Click para ver especies por generación">
+        <div class="stat-icon-dna">🧬</div>
+        <span class="stat-num" id="countGeneracion">0</span>
+        <span class="stat-label">Generación</span>
+      </div>
+    </div>
+
+    <div class="log-section">
+      <h2 class="section-title">Registro de Eventos</h2>
+      <div class="log" id="logContainer"></div>
+    </div>
+  </aside>
+
+  <!-- PANEL CENTRAL -->
+  <main class="center-panel">
+    <div class="grid-wrap">
+      <div id="grid"></div>
+    </div>
+    <div class="map-footer">
+      <span class="footer-info" id="footerTerreno">Terreno: Pasto (0, 0)</span>
+      <span class="footer-divider">|</span>
+      <span class="footer-info">Clima: Templado</span>
+      <span class="footer-divider">|</span>
+      <span class="footer-info" id="footerRecursos">Recursos: Abundantes</span>
+    </div>
+    <div class="structures-bar">
+      <span class="struct-label">Estructuras de datos:</span>
+      <button class="struct-btn active">Grid 2D</button>
+      <button class="struct-btn active">Hash Map</button>
+      <button class="struct-btn active">Tree</button>
+      <button class="struct-btn active">Grafo</button>
+      <button class="struct-btn active" id="btnVerGrafo" onclick="toggleGrafo()">Ver Grafo</button>
+    </div>
+  </main>
+
+  <!-- PANEL DERECHO -->
+  <aside class="right-panel">
+    <h2 class="section-title">Criatura Seleccionada</h2>
+
+    <div class="selected-panel">
+      <div class="selected-top">
+        <div class="creature-portrait" id="creaturePortrait">
+          <div class="portrait-placeholder">?</div>
+        </div>
+        <div class="selected-info">
+          <p class="info-row">ID: <strong id="infoID">—</strong></p>
+          <p class="info-row">Generación: <strong id="infoGeneracion">—</strong></p>
+          <div id="badgeTipo" class="badge">—</div>
+        </div>
+      </div>
+
+      <div class="bars-section">
+        <div>
+          <div class="bar-row">
+            <span class="bar-label">Energía</span>
+            <span class="bar-value" id="energiaTexto">0 / 100</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill energia-fill" id="barraEnergia"></div>
+          </div>
+        </div>
+        <div>
+          <div class="bar-row">
+            <span class="bar-label">Hambre</span>
+            <span class="bar-value" id="hambreTexto">0 / 100</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill hambre-fill" id="barraHambre"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="extra-info">
+        <p class="info-row">Velocidad: <strong id="infoVelocidad">—</strong></p>
+        <p class="info-row">Consumo: <strong id="infoConsumo">5 energía/turno</strong></p>
+        <p class="info-row">Posición: <strong id="infoPosicion">—</strong></p>
+        <p class="info-row">ID Padre: <strong id="infoPadre">—</strong></p>
+        <button id="btnArbolModal" onclick="abrirArbolModal()" style="display:none;margin-top:8px;width:100%;
+          font-family:var(--font-pixel);font-size:6px;padding:7px;border-radius:4px;letter-spacing:1.5px;
+          border:1px solid var(--green-2);background:rgba(74,201,110,0.08);color:var(--green-3);cursor:pointer;">
+          🌿 VER ÁRBOL GENEALÓGICO
+        </button>
+      </div>
+    </div>
+
+
+
+    <div class="dict-panel">
+      <h2 class="section-title">Diccionario de Criaturas</h2>
+      <div class="dict-scroll">
+        <div class="dict-grid" id="diccionarioContainer"></div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+<!-- MODAL ÁRBOL GENEALÓGICO SVG -->
+<div id="modalArbol" class="modal-grafo" style="display:none;align-items:flex-start;padding-top:20px">
+  <div class="modal-grafo-inner" style="max-width:520px;width:90vw;max-height:70vh;display:flex;flex-direction:column">
+    <div class="modal-grafo-header">
+      <span class="modal-title-txt" id="tituloArbol">ÁRBOL GENEALÓGICO</span>
+      <button class="modal-close-btn" onclick="cerrarArbolModal()">✕</button>
+    </div>
+    <div class="modal-grafo-body" style="padding:12px;flex:1;overflow:hidden;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:10px;color:#567060;font-family:JetBrains Mono,monospace;flex-shrink:0">
+        <span style="color:#35a054">● Vivo</span> · 
+        <span style="color:#c03838">● Muerto</span> · 
+        Click en criatura para seleccionarla
+      </div>
+      <div style="overflow-y:auto;background:#07100a;border-radius:6px;border:1px solid rgba(53,160,84,0.15);flex:1;padding:12px">
+        <div id="linajeContainer"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GENERACIONES -->
+<div id="modalGeneracion" class="modal-grafo" style="display:none">
+  <div class="modal-grafo-inner" style="max-width:480px">
+    <div class="modal-grafo-header">
+      <span class="modal-title-txt" id="tituloModalGen">GENERACIÓN —</span>
+      <button class="modal-close-btn" onclick="togglePanelGeneracion()">✕</button>
+    </div>
+    <div class="modal-grafo-body" style="gap:10px">
+      <div style="font-size:11px;color:#567060;font-family:JetBrains Mono,monospace">
+        Click en una generación para ver las especies que llegaron. Click en una criatura para seleccionarla.
+      </div>
+      <div id="genBtns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      <div id="genCriaturas" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:340px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GRAFO DE INTERACCIONES -->
+<div id="modalGrafo" class="modal-grafo" style="display:none">
+  <div class="modal-grafo-inner">
+    <div class="modal-grafo-header">
+      <span class="modal-title-txt">GRAFO DE INTERACCIONES DEL ECOSISTEMA</span>
+      <button class="modal-close-btn" onclick="toggleGrafo()">✕</button>
+    </div>
+    <div class="modal-grafo-body">
+      <svg id="svgGrafo" width="540" height="340" viewBox="0 0 540 340"></svg>
+      <div class="grafo-leyenda">
+        <span class="ley-item"><span class="ley-dot" style="background:#e85555"></span>Depredador→Presa</span>
+        <span class="ley-item"><span class="ley-dot" style="background:#4ac96e"></span>Herbívoro→Planta</span>
+        <span class="ley-item"><span class="ley-dot" style="background:#5b9fd4"></span>Competencia</span>
+      </div>
+      <div class="modal-grafo-spatial">
+        <div class="spatial-title">GRAFO ESPACIAL — ZONAS DEL MAPA (DIJKSTRA)</div>
+        <svg id="svgEspacial" width="540" height="180" viewBox="0 0 540 180"></svg>
+        <div class="grafo-leyenda" style="margin-top:6px">
+          <span class="ley-item"><span class="ley-dot" style="background:#35a054"></span>costo bajo (pasto=1)</span>
+          <span class="ley-item"><span class="ley-dot" style="background:#27a844; opacity:0.6"></span>costo medio (bosque=3)</span>
+          <span class="ley-item"><span class="ley-dot" style="background:#2d6ea8"></span>costo alto (agua=10)</span>
+        </div>
+      </div>
+
+      <div class="modal-grafo-spatial">
+        <div class="spatial-title">EVOLUCIÓN DE ATRIBUTOS POR GENERACIÓN</div>
+        <svg id="svgEvo" width="520" height="160" viewBox="0 0 520 160" style="width:100%;height:auto"></svg>
+        <div class="grafo-leyenda" style="margin-top:6px">
+          <span class="ley-item"><span class="ley-dot" style="background:#4ac96e"></span>Velocidad prom.</span>
+          <span class="ley-item"><span class="ley-dot" style="background:#e08535"></span>Consumo prom.</span>
+          <span class="ley-item"><span class="ley-dot" style="background:#5b9fd4"></span>Población</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="adaptia.js"></script>
+</body>
+</html>
