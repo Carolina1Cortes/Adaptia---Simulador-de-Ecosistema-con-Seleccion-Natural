@@ -754,27 +754,27 @@ function renderizar() {
       if (terreno === "agua") {
         const img = document.createElement("img");
         img.className = "terrain-img";
-        img.src = "agua.png";
+        img.src = "tiles/agua.png";
         cell.appendChild(img);
       } else if (terreno === "arbol") {
         const img = document.createElement("img");
         img.className = "terrain-img arbol-img";
-        img.src = "arbol1.png";
+        img.src = "tiles/arbol1.png";
         cell.appendChild(img);
       } else if (terreno === "roca") {
         const img = document.createElement("img");
         img.className = "terrain-img";
-        img.src = "roca.png";
+        img.src = "tiles/roca.png";
         cell.appendChild(img);
       } else if (terreno === "arbusto") {
         const img = document.createElement("img");
         img.className = "terrain-img arbusto-img";
-        img.src = "arbusto.png";
+        img.src = "tiles/arbusto.png";
         cell.appendChild(img);
       } else if (terreno === "planta1" || terreno === "planta2" || terreno === "planta3") {
         const img = document.createElement("img");
         img.className = "deco-img";
-        img.src = `${terreno}.png`;
+        img.src = `tiles/${terreno}.png`;
         cell.appendChild(img);
       }
 
